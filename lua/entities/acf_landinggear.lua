@@ -51,8 +51,6 @@ if CLIENT then
         if ModelName == nil or #ModelName == 0 then return end
 
         self.Decoy = ClientsideModel(ModelName)
-        local Mul = self:GetVisualSizeMul()
-        self.Decoy:SetModelScale(Mul == 0 and 1 or Mul)
 
         self:CallOnRemove("ACF_CleanUpDecoy", function(ent)
             ent:RemoveDecoy()
