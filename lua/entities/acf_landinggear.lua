@@ -10,22 +10,19 @@ ENT.ACF_PreventArmoring = false
 -- Maps user var name to its type, whether it is client data and type specific arguments (all support defaults?)
 ENT.ACF_UserVars = {
     ["PhysRadius"]      = {Type = "Number",   Min = 4,    Max = 80,  Default = 9,    Decimals = 2, ClientData = true},
-    ["WheelModel"]      = {Type = "String",   Default = "models/xqm/airplanewheel1.mdl",           ClientData = true},
-    ["ModelScale"]      = {Type = "Number",   Min = 0.01, Max = 50,  Default = 1,    Decimals = 2, ClientData = true},
-    ["WheelZ"]          = {Type = "Number",   Min = 10, Max = 256, Default = 45,  Decimals = 2, ClientData = true},
+    ["ShowModel"]       = {Type = "Boolean",                                                       ClientData = true},
+    ["WheelZ"]          = {Type = "Number",   Min = 10,   Max = 256, Default = 45,   Decimals = 2, ClientData = true},
 }
 
 -- These are simply for networking these values to the client.
 function ENT:SetupDataTables()
     self:NetworkVar("Entity", 0, "WheelEntity")
-    self:NetworkVar("String", 0, "VisualModel")
     self:NetworkVar("Float", 0, "WheelAngle")
-    self:NetworkVar("Float", 1, "VisualSizeMul")
+    self:NetworkVar("Bool", 0, "ShowVisualModel")
 
     if CLIENT then
         self:NetworkVarNotify("WheelEntity", self.CL_OnWheelChanged)
-        self:NetworkVarNotify("VisualModel", self.CL_OnVisualModelChanged)
-        self:NetworkVarNotify("VisualSizeMul", self.CL_OnVisualSizeMulChanged)
+        self:NetworkVarNotify("ShowVisualModel", self.CL_OnShowVisualModelChanged)
     end
 end
 
@@ -43,8 +40,13 @@ local Inputs = {
 }
 
 if CLIENT then
-    function ENT:CreateDecoy(SV_Wheel)
+    function ENT:GetVisualModel()
+        return "models/xqm/airplanewheel1.mdl"
+    end
+    function ENT:CreateDecoy()
         self:RemoveDecoy()
+        if not self:GetShowVisualModel() then return end
+
         local ModelName = self:GetVisualModel()
         if ModelName == nil or #ModelName == 0 then return end
 
@@ -116,14 +118,11 @@ if CLIENT then
         end
     end
 
-    function ENT:CL_OnVisualModelChanged(_, _, New)
-        self:RemoveDecoy()
-    end
-
-    function ENT:CL_OnVisualSizeMulChanged(_, _, New)
-        local Decoy = self.Decoy
-        if IsValid(Decoy) then
-            Decoy:SetModelScale(New)
+    function ENT:CL_OnShowVisualModelChanged(_, _, New)
+        if New then
+            self:CreateDecoy()
+        else
+            self:RemoveDecoy()
         end
     end
 end
@@ -152,8 +151,7 @@ if SERVER then
     end
 
     function ENT:ACF_PostUpdateEntityData(ClientData)
-        self:SetVisualModel(ClientData.WheelModel)
-        self:SetVisualSizeMul(ClientData.ModelScale or 1)
+        self:SetShowVisualModel(ClientData.ShowModel)
         self.PhysRadius = ClientData.PhysRadius
         self.WheelZ     = ClientData.WheelZ
         if self.Deployed and self:IsSystemValid() then

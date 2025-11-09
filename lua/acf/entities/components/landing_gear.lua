@@ -27,15 +27,16 @@ Components.RegisterItem("LAND-GEAR-ITM", "LAND-GEAR", {
 		PhysRadius:SetClientData("PhysRadius")
 		PhysRadius:SetValue(9)
 
-		local ModelScale = Base:AddSlider("Model Scale", 0.01, 50, 2)
-		ModelScale:SetClientData("ModelScale")
-		ModelScale:SetValue(1)
-
 		local WheelZ = Base:AddSlider("Wheel Height", 10, 256, 2)
 		WheelZ:SetClientData("WheelZ")
 		WheelZ:SetValue(45)
 
+		local ShowModel = Base:AddCheckBox("Show Model?")
+		ShowModel:SetClientData("ShowModel")
+		ShowModel:SetValue(true)
+
 		ACF.SetClientData("PhysRadius", 9)
+		ACF.SetClientData("ShowModel", true)
 		ACF.SetClientData("WheelZ", 45, true)
 	end,
 })
