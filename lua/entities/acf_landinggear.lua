@@ -146,10 +146,9 @@ if SERVER then
         self:GetPhysicsObject():SetMass(200)
     end
 
-    function ENT:ACF_PostMenuSpawn()
-        self:DropToFloor()
+    function ENT:ACF_PostMenuSpawn(Trace)
+        self:SetPos(Trace.HitPos + (Trace.HitNormal * (10 + self.PhysRadius + self.WheelZ)))
         self:SetAngles(self:GetAngles() + Angle(0, -90, 0))
-        self:SetPos(self:GetPos() + Vector(0, 0, 120))
     end
 
     function ENT:ACF_PostUpdateEntityData(ClientData)
@@ -206,6 +205,8 @@ if SERVER then
 
         Wheel:GetPhysicsObject():SetVelocity(Physical:GetPhysicsObject():GetVelocity())
         Wheel:GetPhysicsObject():SetAngleVelocity(Physical:GetPhysicsObject():GetAngleVelocity())
+
+        constraint.NoCollide(self, Wheel, 0, 0, true)
 
         -- Locals for later
         local VecOffset
