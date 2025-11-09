@@ -202,7 +202,7 @@ if SERVER then
         Wheel:GetPhysicsObject():SetVelocity(Physical:GetPhysicsObject():GetVelocity())
         Wheel:GetPhysicsObject():SetAngleVelocity(Physical:GetPhysicsObject():GetAngleVelocity())
 
-        constraint.NoCollide(self, Wheel, 0, 0, true)
+        constraint.NoCollide(self, Wheel, 0, 0, true).DoNotDuplicate = true
 
         -- Locals for later
         local VecOffset
