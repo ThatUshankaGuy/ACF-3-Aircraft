@@ -1,6 +1,36 @@
 local Types     = ACF.Classes.BaseplateTypes
 local Baseplate = Types.Register("AircraftEx")
 
+local AircraftSimulator_MT_methods = {}
+local AircraftSimulator_MT = {__index = AircraftSimulator_MT_methods}
+local function AircraftSimulator(BaseplateEnt)
+    local Obj = setmetatable({
+        Baseplate = BaseplateEnt
+    }, AircraftSimulator_MT)
+
+    Obj.LinearForce  = Vector(0, 0, 0)
+    Obj.AngularForce = Vector(0, 0, 0)
+
+    Obj:FullUpdateSystem()
+    return Obj
+end
+
+function AircraftSimulator_MT_methods:FullUpdateSystem()
+
+end
+
+function AircraftSimulator_MT_methods:DetermineForces()
+
+end
+
+function AircraftSimulator_MT_methods:ApplyForces()
+
+end
+
+---
+---
+---
+
 function Baseplate:OnLoaded()
     self.Name		 = "Aircraft Experiments"
     self.Icon        = "icon16/weather_clouds.png"
@@ -34,6 +64,15 @@ function Baseplate:PhysicsCollide(Data)
 end
 
 function Baseplate:Think()
+    local Simulator = self.Simulator
+    if not Simulator then
+        Simulator = AircraftSimulator(self)
+        self.Simulator = Simulator
+    end
+
+    Simulator:DetermineForces()
+    Simulator:ApplyForces()
+
     self:NextThink(CurTime())
     return true
 end
