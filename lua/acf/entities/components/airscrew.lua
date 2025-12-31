@@ -14,8 +14,9 @@ Components.RegisterItem("AIRSCREW-ITM", "AIRSCREW", {
 	Description = "An airscrew converts rotary motion from an engine or other power source into a swirling slipstream which pushes the propeller forwards or backwards.",
 	Model       = "models/props_phx/misc/propeller3x_small.mdl",
 
-	CreateMenu = function(Data, Menu)
-		local Base = Menu:AddCollapsible("Airscrew Information", nil, "icon16/dvd_edit.png")
+	CreateMenu = function(_, Menu)
+		local SizeX = Menu:AddSlider("Size", 0.5, 1, 2)
+		SizeX:SetClientData("AirscrewSize", "OnValueChanged")
 	end
 
 })

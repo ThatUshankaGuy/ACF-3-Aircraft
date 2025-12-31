@@ -1,7 +1,12 @@
 include("shared.lua")
 
-function ENT:Initialize()
+DEFINE_BASECLASS "acf_base_scalable"
 
-    self:DrawModel()
+
+function ENT:Draw()
+
+    BaseClass.Draw(self)
 
 end
+
+ACF.Classes.Entities.Register()

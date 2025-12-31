@@ -1,16 +1,24 @@
-DEFINE_BASECLASS "acf_base_simple"
-AddCSLuaFile()
+DEFINE_BASECLASS("acf_base_scalable")
 
-ENT.PrintName     = "ACF Airscrew"
-ENT.WireDebugName = "ACF Airscrew"
-ENT.PluralName    = "ACF Airscrews"
-ENT.IsAirscrew = true
+ENT.PrintName      = "ACF Airscrew"
+ENT.WireDebugName  = "ACF Airscrew"
+ENT.PluralName     = "ACF Airscrews"
+ENT.ACF_Limit      = 8
 ENT.ACF_PreventArmoring = true
 
+-- Maps user var name to its type, whether it is client data and type specific arguments (all support defaults?)
+-- Code is literally copied over from waterjets, WIP!!
+
+ENT.ACF_UserVars = {
+    ["AirscrewSize"] = {Type = "Number", Min = 0.5, Max = 2, Default = 1, Decimals = 2, ClientData = true},
+    ["SoundPath"] = {Type = "String", Default = "ambient/machines/spin_loop.wav"},
+    ["SoundPitch"] = {Type = "Number", Min = 0.1, Max = 2, Default = 1, Decimals = 2},
+    ["SoundVolume"] = {Type = "Number", Min = 0.1, Max = 1, Default = 0.2, Decimals = 2},
+}
+
+ENT.ACF_WireInputs = {
+    "Pitch (Horizontal Steer Angle, -1 to 1)",
+    "Yaw (Vertical Steer Angle, -1 to 1)",
+}
+
 cleanup.Register("acf_airscrew")
-
-local ACF      		= ACF
-local Classes  		= ACF.Classes
-local Entities 		= Classes.Entities
-
-Classes.Entities.Register()
