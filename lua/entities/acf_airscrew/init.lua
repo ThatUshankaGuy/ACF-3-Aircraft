@@ -43,6 +43,7 @@ end
 function ENT.ACF_OnVerifyClientData(ClientData)
 	ClientData.AirscrewSize = math.Clamp(ClientData.AirscrewSize or 1, 0.5, 1)
 	ClientData.Size = Vector(ClientData.AirscrewSize, ClientData.AirscrewSize, ClientData.AirscrewSize)
+	ClientData.BladePitch = math.Clamp(ClientData.BladePitch or 15, 15, 45)
 end
 
 function ENT:ACF_PreSpawn()
@@ -51,6 +52,22 @@ end
 
 function ENT:ACF_PostUpdateEntityData(ClientData)
 	self:SetScale(ClientData.Size)
+
+	self.BladePitch = ClientData.BladePitch
+
+	self.Rho = 1.225 			-- Density of air in kg/m^3
+	self.Diameter = ClientData.AirscrewSize * 50 * ACF.InchToMeter -- Convert from inches to meters (model is 50u in diameter by default)
+
+	self.Gearboxes = {}
+end
+
+function ENT:ACF_PostMenuSpawn()
+	self:DropToFloor()
+end
+
+function ENT:ACF_UpdateOverlayState(State)
+	State:AddNumber("Scale", self:ACF_GetUserVar("AirscrewSize"))
+	State:AddNumber("Blade Pitch", self.BladePitch)
 end
 
 ACF.Classes.Entities.Register()
